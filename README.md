@@ -79,10 +79,10 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
 ```plaintext
 link-shortener/
 │
-├── app/
+├── src/
 │   ├── __init__.py
 │   ├── shortener.py
-│   └── ...
+│   └── app.py
 │
 ├── requirements.txt
 ├── README.md
