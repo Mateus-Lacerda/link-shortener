@@ -1,0 +1,20 @@
+ARG ARCH
+FROM --platform=linux/$ARCH python:3.10-slim-buster
+
+# Copy the source code
+ENV SERVER_PORT=${SERVER_PORT:-"5000"}
+ENV DEBUG=${DEBUG:-"False"}
+ENV TZ=${TZ:-"America/Sao_Paulo"}
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY ./src /app/src
+
+
+EXPOSE $SERVER_PORT
+
+ENV PYTHONPATH=/app:$PYTHONPATH
+CMD ["python", "-u", "src/app.py"]

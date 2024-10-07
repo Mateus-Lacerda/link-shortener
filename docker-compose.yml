@@ -1,0 +1,19 @@
+services:
+  linkshortener:
+    build:
+      context: .
+      dockerfile: Dockerfile.linkshortener
+      args:
+        ARCH: x86_64
+    volumes:
+      - ./src:/app/src
+    environment:
+      REDIS_URL: redis://redis:6379/10
+      FLASK_ENV: production # loadtesting or production or development
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
