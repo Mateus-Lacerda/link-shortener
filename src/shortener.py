@@ -4,7 +4,6 @@ import json
 
 shortener = Blueprint("shortener", __name__)
 index_bp = Blueprint("index", __name__)
-red = Blueprint("red", __name__)
 
 @shortener.route("/shorten", methods=["POST"])
 def shorten():
@@ -16,14 +15,15 @@ def shorten():
     urls = current_app.redis_client.get("urls")
     if urls:
         urls = json.loads(urls)
-        if url in urls:
-            return jsonify({"error": "URL already shortened"}), 400
+        for short_id, stored_url in urls.items():
+            if stored_url == url:
+                return jsonify({"short_id": short_id}), 200
     else:
-        urls = []
+        urls = {}
 
     short_id = str(uuid.uuid4())[:6]
     current_app.redis_client.set(short_id, url)
-    urls.append(url)
+    urls[short_id] = url
     current_app.redis_client.set("urls", json.dumps(urls))
     return jsonify({"short_id": short_id}), 201
 
@@ -31,7 +31,7 @@ def shorten():
 def index():
     return jsonify({"message": "Hello, World!"})
 
-@red.route("/red/<short_id>", methods=["GET"])
+@index_bp.route("/<short_id>", methods=["GET"])
 def redirect_to_url(short_id):
     url = current_app.redis_client.get(short_id)
     if not url:
