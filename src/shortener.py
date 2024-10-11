@@ -3,7 +3,7 @@ import uuid
 import json
 
 shortener = Blueprint("shortener", __name__)
-index_bp = Blueprint("index", __name__)
+red = Blueprint("index", __name__)
 
 @shortener.route("/shorten", methods=["POST"])
 def shorten():
@@ -27,11 +27,11 @@ def shorten():
     current_app.redis_client.set("urls", json.dumps(urls))
     return jsonify({"short_id": short_id}), 201
 
-@index_bp.route("/", methods=["GET"])
+@red.route("/red", methods=["GET"])
 def index():
     return jsonify({"message": "Hello, World!"})
 
-@index_bp.route("/<short_id>", methods=["GET"])
+@red.route("/<short_id>", methods=["GET"])
 def redirect_to_url(short_id):
     url = current_app.redis_client.get(short_id)
     if not url:
