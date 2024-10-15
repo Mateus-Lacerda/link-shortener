@@ -1,42 +1,34 @@
-from flask import Blueprint, request, jsonify, current_app, redirect
+from flask import Blueprint, request, jsonify, current_app, redirect, url_for
 import uuid
-import json
 
 shortener = Blueprint("shortener", __name__)
-red = Blueprint("index", __name__)
+red = Blueprint("red", __name__)
 
-@shortener.route("/shorten", methods=["POST"])
+@shortener.route("/", methods=["POST"])
 def shorten():
+    
     data = request.get_json()
-    url = data.get("url")
+    url = str(data.get("url"))
+
     if not url:
         return jsonify({"error": "URL is required"}), 400
 
-    urls = current_app.redis_client.get("urls")
-    if urls:
-        urls = json.loads(urls)
-        for short_id, stored_url in urls.items():
-            if stored_url == url:
-                return jsonify({"short_id": short_id}), 200
-    else:
-        urls = {}
+    chave = current_app.redis_client.get(f"urls:destinos:{url}")
+
+    if chave:
+        return url_for("red.redirect_to_url", short_id=chave.decode("utf-8"), _external=True), 200
 
     short_id = str(uuid.uuid4())[:6]
-    current_app.redis_client.set(short_id, url)
-    urls[short_id] = url
-    current_app.redis_client.set("urls", json.dumps(urls))
-    return jsonify({"short_id": short_id}), 201
+    current_app.redis_client.set(f"urls:chaves:{short_id}", url)
+    current_app.redis_client.set(f"urls:destinos:{url}", short_id)
 
-@red.route("/red", methods=["GET"])
-def index():
-    return jsonify({"message": "Hello, World!"})
+    return url_for("red.redirect_to_url", short_id=short_id, _external=True), 201
 
-@red.route("/<short_id>", methods=["GET"])
+
+@red.route("/", methods=["GET"])
 def redirect_to_url(short_id):
-    url = current_app.redis_client.get(short_id)
+    url = current_app.redis_client.get(f"urls:chaves:{short_id}")
     if not url:
         return jsonify({"error": "URL not found"}), 404
     url = url.decode("utf-8")
-    if not url.startswith("https://"):
-        url = "https://" + url
     return redirect(url, code=302)

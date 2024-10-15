@@ -50,6 +50,9 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
         docker compose up --build
         ```
 
+4. Na sua aplicação pessoal
+    4.2. Copie o arquivo `shortener.py` para onde ficam suas rotas e registre os blueprints no seu flask app, como feito em `app.py ln's 11-12`.
+
 ## Uso
 
 1. Inicie o servidor Flask:
@@ -60,18 +63,18 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
 
 2. Encurtar uma URL:
 
-    Faça uma requisição POST para `/shorten` com um JSON contendo a URL que você deseja encurtar.
+    Faça uma requisição POST para `/v1/add_link` com um JSON contendo a URL que você deseja encurtar.
 
     ```sh
-    curl -X POST -H "Content-Type: application/json" -d '{"url": "http://example.com"}' http://127.0.0.1:5000/shorten
+    curl -X POST -H "Content-Type: application/json" -d '{"url": "http://example.com"}' http:localhost:8080/<short_id>
     ```
 
 3. Redirecionar para uma URL encurtada:
 
-    Acesse `/red/<short_id>` onde `<short_id>` é o identificador curto retornado pela requisição de encurtamento.
+    Acesse `<seu_dominio>/<short_id>` onde `<short_id>` é o identificador curto retornado pela requisição de encurtamento.
 
     ```sh
-    curl -X GET http://127.0.0.1:5000/red/<short_id>
+    curl -X GET http:localhost:8080/<short_id>
     ```
 
 ## Estrutura do Projeto

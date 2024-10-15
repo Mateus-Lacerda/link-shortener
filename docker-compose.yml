@@ -9,7 +9,9 @@ services:
       - ./src:/app/src
     environment:
       REDIS_URL: redis://redis:6379/10
-      FLASK_ENV: production # loadtesting or production or development
+      FLASK_ENV: production
+    ports:
+      - 8080:5000
     depends_on:
       - redis
 
