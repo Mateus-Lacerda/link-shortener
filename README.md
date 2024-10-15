@@ -92,7 +92,8 @@ link-shortener/
 │
 ├── requirements.txt
 ├── README.md
-└── ...
+└── docker-compose.yml
+└── Dockerfile.linkshortener
 ```
 
 ## Contribuição
