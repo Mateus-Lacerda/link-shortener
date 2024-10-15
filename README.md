@@ -24,6 +24,7 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
     ```
 
 2. Utilizando venv
+
     2.2. Crie um ambiente virtual e ative-o:
 
         ```sh
@@ -42,6 +43,7 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
         Certifique-se de que o Redis está instalado e em execução na sua máquina.
 
 3. Utilizando docker
+
     3.2. Instale o docker:
 
     3.3. Rode o encurtador:
@@ -51,6 +53,7 @@ Este é um aplicativo simples de encurtador de URLs construído com Flask. Ele p
         ```
 
 4. Na sua aplicação pessoal
+
     4.2. Copie o arquivo `shortener.py` para onde ficam suas rotas e registre os blueprints no seu flask app, como feito em `app.py ln's 11-12`.
 
 ## Uso
